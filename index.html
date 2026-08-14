@@ -4,9 +4,381 @@
 <head>
     <meta charset="UTF-8">
     <title>SkyMoon Client</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Подключаем официальную библиотеку Supabase JS из CDN -->
+    <!-- Подключаем Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0b0d10;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            overflow: hidden;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        .navbar-container {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 700px;
+            height: 44px;
+            background: rgba(25, 28, 36, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 0 16px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-icon {
+            background: #8b5cf6;
+            color: white;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lang-switcher {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 2px 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            gap: 4px;
+        }
+
+        .lang-switcher span {
+            padding: 2px 6px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .lang-switcher span.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .cabinet-btn {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .cabinet-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+        }
+
+        .hero-section {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -45%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        .hero-logo-badge {
+            width: 48px;
+            height: 48px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero-title .accent {
+            color: #a78bfa;
+        }
+
+        .hero-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            margin-bottom: 32px;
+            max-width: 450px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            display: flex;
+            width: 820px;
+            height: 480px;
+            background: #13161c;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .modal-left-pane {
+            width: 410px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('1.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .modal-brand-content h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .modal-brand-content p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.4;
+        }
+
+        .modal-right-pane {
+            width: 410px;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .auth-form-content h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .auth-switch-text {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 24px;
+        }
+
+        .auth-switch-text a {
+            color: #a78bfa;
+            text-decoration: none;
+        }
+
+        .auth-switch-text a:hover {
+            text-decoration: underline;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #8b5cf6;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #5b52a3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #6d62c4;
+        }
+    </style>
 </head>
 
 <body>
@@ -87,8 +459,8 @@
                     <h2>Вход</h2>
                     <p class="auth-switch-text">Нет аккаунта? <a href="#" onclick="switchForm('register')">Регистрация</a></p>
                     <div class="input-group">
-                        <label>Email</label>
-                        <input type="text" id="loginEmail" placeholder="you@mail.ru">
+                        <label>Email или логин</label>
+                        <input type="text" id="loginEmail" placeholder="you@mail.ru или логин">
                     </div>
                     <div class="input-group">
                         <label>Пароль</label>
@@ -114,8 +486,8 @@
         </div>
     </div>
 
+    <!-- Скрипты -->
     <script>
-        // ВСТАВЬ СЮДА СВОЙ PROJECT URL ИЗ SUPABASE
         const SUPABASE_URL = 'https://ТВОЙ_ID.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
         
