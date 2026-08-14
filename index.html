@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyMoon Client</title>
-    <!-- Официальная библиотека Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -136,6 +135,23 @@
             transform: translateY(-1px);
         }
 
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        /* Главная страница */
         .hero-section {
             position: absolute;
             top: 50%;
@@ -204,7 +220,6 @@
         .btn-primary:hover {
             background: #7c3aed;
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
         }
 
         .btn-secondary {
@@ -222,7 +237,132 @@
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
+        }
+
+        /* Личный кабинет (Dashboard) */
+        .dashboard-container {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .dashboard-header p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .profile-card {
+            background: rgba(19, 22, 28, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .profile-user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .profile-avatar {
+            width: 52px;
+            height: 52px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .profile-meta h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .profile-meta span {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .download-client-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .download-client-btn:hover {
+            background: #4f46e5;
+        }
+
+        .account-details-box {
+            background: rgba(19, 22, 28, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .details-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #8b5cf6;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-item label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .detail-item span {
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
         }
 
         /* Модальное окно */
@@ -267,7 +407,6 @@
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 10px;
-            letter-spacing: -0.5px;
         }
 
         .modal-brand-content p {
@@ -278,7 +417,7 @@
 
         .modal-right-pane {
             width: 410px;
-            padding: 50px 40px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -309,15 +448,15 @@
         }
 
         .auth-form-content h2 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .auth-switch-text {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .auth-switch-text a {
@@ -325,20 +464,16 @@
             text-decoration: none;
         }
 
-        .auth-switch-text a:hover {
-            text-decoration: underline;
-        }
-
         .input-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             text-align: left;
         }
 
         .input-group label {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.6);
         }
 
@@ -346,7 +481,7 @@
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 10px;
-            padding: 12px 14px;
+            padding: 10px 14px;
             color: white;
             font-size: 13px;
             outline: none;
@@ -363,11 +498,11 @@
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 12px;
-            font-size: 14px;
+            padding: 11px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 6px;
             transition: background 0.2s;
         }
 
@@ -384,7 +519,7 @@
             <div class="nav-left">
                 <div class="nav-logo">
                     <span class="logo-icon">S</span>
-                    <span class="logo-text">skymoon</span>
+                    <span class="nav-link" style="color:white; font-weight:700;">skymoon</span>
                 </div>
                 <a href="#" class="nav-link">Тарифы</a>
                 <a href="#" class="nav-link">Документация</a>
@@ -397,18 +532,15 @@
                     <span>EN</span>
                     <span>UA</span>
                 </div>
-                <button class="cabinet-btn" onclick="openModal('login')">
-                    <svg width="14" height="14" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
-                        <path d="M11.1068 13.6229V12.2896C11.1068 11.5823 10.8258 10.9041 10.3257 10.404C9.82562 9.90388 9.14735 9.62292 8.4401 9.62292H4.4401C3.73286 9.62292 3.05458 9.90388 2.55449 10.404C2.05439 10.9041 1.77344 11.5823 1.77344 12.2896V13.6229M9.10677 4.28959C9.10677 5.76235 7.91286 6.95626 6.4401 6.95626C4.96734 6.95626 3.77344 5.76235 3.77344 4.28959C3.77344 2.81683 4.96734 1.62292 6.4401 1.62292C7.91286 1.62292 9.10677 2.81683 9.10677 4.28959Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                    <span>Кабинет</span>
-                </button>
+                <div id="navAuthArea">
+                    <button class="cabinet-btn" onclick="openModal('login')">Кабинет</button>
+                </div>
             </div>
         </nav>
     </header>
 
-    <!-- Главный экран -->
-    <main class="hero-section">
+    <!-- Главный экран (для гостей) -->
+    <main id="heroSection" class="hero-section">
         <div class="hero-logo-badge">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
@@ -431,7 +563,59 @@
         </div>
     </main>
 
-    <!-- Модальное окно -->
+    <!-- Личный кабинет (для авторизованных) -->
+    <div id="dashboardSection" class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Аккаунт</h1>
+            <p>Ваш профиль, активность и данные аккаунта</p>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-user-info">
+                <div class="profile-avatar" id="userAvatarLetter">U</div>
+                <div class="profile-meta">
+                    <h3 id="profileUsername">username</h3>
+                    <span id="profileEmail">email@gmail.com</span>
+                </div>
+            </div>
+            <button class="download-client-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Скачать
+            </button>
+        </div>
+
+        <div class="account-details-box">
+            <div class="details-title"># Детали аккаунта</div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <label># UID</label>
+                    <span id="profileUid">Загрузка...</span>
+                </div>
+                <div class="detail-item">
+                    <label>⚙️ Роль</label>
+                    <span>Пользователь</span>
+                </div>
+                <div class="detail-item">
+                    <label>👤 Логин (Username)</label>
+                    <span id="profileLogin">...</span>
+                </div>
+                <div class="detail-item">
+                    <label>✉️ Почта</label>
+                    <span id="profileEmailDetail">...</span>
+                </div>
+                <div class="detail-item">
+                    <label>📅 Дата регистрации</label>
+                    <span id="profileDate">...</span>
+                </div>
+                <div class="detail-item">
+                    <label>🛡️ HWID</label>
+                    <span style="color: rgba(255,255,255,0.3); font-size: 12px;">Не привязан</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно авторизации/регистрации -->
     <div id="authModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-left-pane">
@@ -451,6 +635,7 @@
             <div class="modal-right-pane">
                 <button class="modal-close-btn" onclick="closeModal()">×</button>
                 
+                <!-- Форма Входа -->
                 <div id="loginForm" class="auth-form-content">
                     <h2>Вход</h2>
                     <p class="auth-switch-text">Нет аккаунта? <a href="#" onclick="switchForm('register'); return false;">Регистрация</a></p>
@@ -465,9 +650,14 @@
                     <button class="btn-submit" onclick="handleLogin()">Войти →</button>
                 </div>
 
+                <!-- Форма Регистрации (с Username) -->
                 <div id="registerForm" class="auth-form-content" style="display: none;">
                     <h2>Регистрация</h2>
                     <p class="auth-switch-text">Уже есть аккаунт? <a href="#" onclick="switchForm('login'); return false;">Войти</a></p>
+                    <div class="input-group">
+                        <label>Никнейм (Username)</label>
+                        <input type="text" id="regUsername" placeholder="westixz">
+                    </div>
                     <div class="input-group">
                         <label>Email</label>
                         <input type="email" id="regEmail" placeholder="you@mail.ru">
@@ -482,7 +672,7 @@
         </div>
     </div>
 
-    <!-- Логика приложения -->
+    <!-- Скрипт логики -->
     <script>
         let supabaseClient = null;
         
@@ -496,6 +686,16 @@
         } catch (e) {
             console.error('Supabase init error:', e);
         }
+
+        // Проверяем сессию при загрузке сайта
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (supabaseClient) {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    loadUserProfile(session.user);
+                }
+            }
+        });
 
         function openModal(type) {
             const modal = document.getElementById('authModal');
@@ -513,46 +713,106 @@
         }
 
         function switchForm(type) {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            if (loginForm && registerForm) {
-                loginForm.style.display = (type === 'login') ? 'block' : 'none';
-                registerForm.style.display = (type === 'register') ? 'block' : 'none';
-            }
+            document.getElementById('loginForm').style.display = (type === 'login') ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = (type === 'register') ? 'block' : 'none';
         }
 
+        // Регистрация с Username
         async function handleRegister() {
-            if (!supabaseClient) {
-                alert('Ошибка инициализации Supabase!');
+            if (!supabaseClient) return alert('Ошибка Supabase');
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !email || !password) {
+                alert('Заполните все поля!');
                 return;
             }
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+            // 1. Создаем пользователя в auth
+            const { data, error } = await supabaseClient.auth.signUp({ 
+                email, 
+                password,
+                options: {
+                    data: { username: username }
+                }
+            });
+
             if (error) {
                 alert('Ошибка: ' + error.message);
-            } else {
-                alert('Успешно! Аккаунт создан. Проверьте почту для подтверждения.');
+                return;
+            }
+
+            if (data.user) {
+                // 2. Записываем профиль в таблицу profiles для генерации UID
+                await supabaseClient.from('profiles').insert([
+                    { id: data.user.id, username: username, email: email }
+                ]);
+
+                alert('Успешно! Аккаунт создан.');
                 closeModal();
+                loadUserProfile(data.user);
             }
         }
 
+        // Вход
         async function handleLogin() {
-            if (!supabaseClient) {
-                alert('Ошибка инициализации Supabase!');
-                return;
-            }
-            const email = document.getElementById('loginEmail').value;
+            if (!supabaseClient) return;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-            
+
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
-                alert('Ошибка: ' + error.message);
+                alert('Ошибка входа: ' + error.message);
             } else {
-                alert('Вы успешно вошли в SkyMoon!');
                 closeModal();
+                loadUserProfile(data.user);
             }
+        }
+
+        // Выход из аккаунта
+        async function handleLogout() {
+            await supabaseClient.auth.signOut();
+            document.getElementById('heroSection').style.display = 'flex';
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('navAuthArea').innerHTML = `<button class="cabinet-btn" onclick="openModal('login')">Кабинет</button>`;
+        }
+
+        // Загрузка данных профиля и показ ЛК
+        async function loadUserProfile(user) {
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'flex';
+
+            // Меняем кнопку в шапке на "Выйти"
+            document.getElementById('navAuthArea').innerHTML = `<button class="logout-btn" onclick="handleLogout()">Выйти</button>`;
+
+            // Подтягиваем данные профиля (UID и Username) из базы данных
+            let username = user.user_metadata?.username || user.email.split('@')[0];
+            let uid = '1';
+
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (profile) {
+                username = profile.username;
+                uid = profile.uid;
+            }
+
+            // Заполняем интерфейс личного кабинета
+            document.getElementById('profileUsername').innerText = username;
+            document.getElementById('profileLogin').innerText = username;
+            document.getElementById('profileEmail').innerText = user.email;
+            document.getElementById('profileEmailDetail').innerText = user.email;
+            document.getElementById('profileUid').innerText = uid;
+            document.getElementById('userAvatarLetter').innerText = username.charAt(0).toUpperCase();
+
+            const regDate = new Date(user.created_at).toLocaleDateString('ru-RU', {
+                day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            document.getElementById('profileDate').innerText = regDate;
         }
     </script>
 </body>
