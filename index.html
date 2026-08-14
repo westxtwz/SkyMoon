@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyMoon Client</title>
-    <!-- Подключаем Supabase -->
+    <!-- Официальная библиотека Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -18,10 +19,7 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #0b0d10;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('1.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-image: radial-gradient(circle at 50% 30%, #1a103c 0%, #0b0d10 70%);
             height: 100vh;
             overflow: hidden;
             color: #ffffff;
@@ -256,9 +254,7 @@
 
         .modal-left-pane {
             width: 410px;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('1.png');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, #1e1136 0%, #0d0e15 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -363,7 +359,7 @@
 
         .btn-submit {
             width: 100%;
-            background: #5b52a3;
+            background: #8b5cf6;
             color: white;
             border: none;
             border-radius: 12px;
@@ -376,13 +372,13 @@
         }
 
         .btn-submit:hover {
-            background: #6d62c4;
+            background: #7c3aed;
         }
     </style>
 </head>
 
 <body>
-    <!-- Верхняя навигационная панель -->
+    <!-- Навигация -->
     <header class="navbar-container">
         <nav class="navbar">
             <div class="nav-left">
@@ -411,7 +407,7 @@
         </nav>
     </header>
 
-    <!-- Основной контент (герой-секция) -->
+    <!-- Главный экран -->
     <main class="hero-section">
         <div class="hero-logo-badge">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -435,7 +431,7 @@
         </div>
     </main>
 
-    <!-- Модальное окно Входа / Регистрации -->
+    <!-- Модальное окно -->
     <div id="authModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-left-pane">
@@ -486,18 +482,17 @@
         </div>
     </div>
 
-    <!-- Скрипты -->
+    <!-- Логика приложения -->
     <script>
-        // Безопасное подключение Supabase
-        let sbClient = null;
-        try {
-            const SUPABASE_URL = 'https://your-project-id.supabase.co'; // Укажи свой URL, когда понадобится
-            const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
-            if (SUPABASE_URL.startsWith('http')) {
-                sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch (e) {
-            console.log('Supabase init note:', e);
+        // Инициализация Supabase под уникальным именем переменной
+        let supabaseClient = null;
+        
+        // Вставь сюда свой URL проекта Supabase:
+        const SUPABASE_URL = 'https://your-project-id.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
+
+        if (window.supabase && SUPABASE_URL.startsWith('http') && !SUPABASE_URL.includes('your-project-id')) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         function openModal(type) {
@@ -525,25 +520,25 @@
         }
 
         async function handleRegister() {
-            if (!sbClient) {
-                alert('Укажи рабочий Supabase URL в коде!');
+            if (!supabaseClient) {
+                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
                 return;
             }
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
-            const { error } = await sbClient.auth.signUp({ email, password });
+            const { error } = await supabaseClient.auth.signUp({ email, password });
             if (error) alert('Ошибка: ' + error.message);
             else alert('Успешно! Проверьте почту.');
         }
 
         async function handleLogin() {
-            if (!sbClient) {
-                alert('Укажи рабочий Supabase URL в коде!');
+            if (!supabaseClient) {
+                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
                 return;
             }
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const { error } = await sbClient.auth.signInWithPassword({ email, password });
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) alert('Ошибка: ' + error.message);
             else alert('Вы успешно вошли в SkyMoon!');
         }
