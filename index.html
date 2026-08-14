@@ -486,9 +486,9 @@
     <script>
         let supabaseClient = null;
         
-        // Вставлен твой реальный Supabase URL и ключ из JWT
+        // Исправленный ключ с правильной датой
         const SUPABASE_URL = 'https://bynovydvlthaxylzoebd.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bm92eWR2bHRoYXh5bHpvZWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3AMG3NjQxNywiZXhwIjoyMTAyMzEyNDE3f0.kV8P0lD1UgSOU-_FNgstgSBzpUwdkwNbd_5M7tl1F-I';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bm92eWR2bHRoYXh5bHpvZWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MzY0MTcsImV4cCI6MjEwMjMxMjQxN30.kV8P0lD1UgSOU-_FNgstgSBzpUwdkwNbd_5M7tl1F-I';
 
         try {
             if (window.supabase && SUPABASE_URL.startsWith('http')) {
@@ -524,7 +524,7 @@
 
         async function handleRegister() {
             if (!supabaseClient) {
-                alert('Ошибка инициализации Supabase!');
+                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
                 return;
             }
             const email = document.getElementById('regEmail').value;
@@ -541,7 +541,7 @@
 
         async function handleLogin() {
             if (!supabaseClient) {
-                alert('Ошибка инициализации Supabase!');
+                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
                 return;
             }
             const email = document.getElementById('loginEmail').value;
