@@ -519,7 +519,7 @@
             <div class="nav-left">
                 <div class="nav-logo">
                     <span class="logo-icon">S</span>
-                    <span class="nav-link" style="color:white; font-weight:700;">skymoon</span>
+                    <span class="nav-link" style="color:white; font-weight:700;">SkyMoon</span>
                 </div>
                 <a href="#" class="nav-link">Тарифы</a>
                 <a href="#" class="nav-link">Документация</a>
@@ -533,7 +533,7 @@
                     <span>UA</span>
                 </div>
                 <div id="navAuthArea">
-                    <button class="cabinet-btn" onclick="openModal('login')">Кабинет</button>
+                    <button class="cabinet-btn" onclick="handleCabinetClick()">Кабинет</button>
                 </div>
             </div>
         </nav>
@@ -550,7 +550,7 @@
         </div>
 
         <h1 class="hero-title">
-            Знай больше.<br>Побеждай с <span class="accent">skymoon</span>.
+            Знай больше.<br>Побеждай с <span class="accent">SkyMoon</span>.
         </h1>
 
         <p class="hero-desc">
@@ -627,7 +627,7 @@
                             <path d="M2 12L12 17L22 12" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h2>skymoon client</h2>
+                    <h2>SkyMoon Client</h2>
                     <p>Контроль, скорость и точность — всё уже внутри.</p>
                 </div>
             </div>
@@ -656,7 +656,7 @@
                     <p class="auth-switch-text">Уже есть аккаунт? <a href="#" onclick="switchForm('login'); return false;">Войти</a></p>
                     <div class="input-group">
                         <label>Никнейм (Username)</label>
-                        <input type="text" id="regUsername" placeholder="westixz">
+                        <input type="text" id="regUsername" placeholder="player">
                     </div>
                     <div class="input-group">
                         <label>Email</label>
@@ -675,6 +675,7 @@
     <!-- Скрипт -->
     <script>
         let supabaseClient = null;
+        let activeUserSession = null;
         
         const SUPABASE_URL = 'https://bynovydvlthaxylzoebd.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
@@ -691,10 +692,22 @@
             if (supabaseClient) {
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) {
+                    activeUserSession = session.user;
                     loadUserProfile(session.user);
                 }
             }
         });
+
+        // Обработка клика по кнопке «Кабинет»
+        function handleCabinetClick() {
+            if (activeUserSession) {
+                // Если сессия есть, сразу кидаем в личный кабинет без пароля
+                loadUserProfile(activeUserSession);
+            } else {
+                // Если не вошел — открываем модальное окно входа
+                openModal('login');
+            }
+        }
 
         function openModal(type) {
             const modal = document.getElementById('authModal');
@@ -720,7 +733,7 @@
             return Math.floor(100000 + Math.random() * 900000);
         }
 
-        // Регистрация с почтой и никнеймом
+        // Регистрация
         async function handleRegister() {
             if (!supabaseClient) return alert('Ошибка Supabase');
             const username = document.getElementById('regUsername').value.trim();
@@ -751,12 +764,13 @@
             }
 
             if (data.user) {
+                activeUserSession = data.user;
                 closeModal();
                 loadUserProfile(data.user);
             }
         }
 
-        // Вход по почте и паролю
+        // Вход
         async function handleLogin() {
             if (!supabaseClient) return;
             const email = document.getElementById('loginEmail').value.trim();
@@ -771,21 +785,24 @@
             if (error) {
                 alert('Ошибка входа: ' + error.message);
             } else {
+                activeUserSession = data.user;
                 closeModal();
                 loadUserProfile(data.user);
             }
         }
 
-        // Выход
+        // Выход из аккаунта
         async function handleLogout() {
             await supabaseClient.auth.signOut();
+            activeUserSession = null;
             document.getElementById('heroSection').style.display = 'flex';
             document.getElementById('dashboardSection').style.display = 'none';
-            document.getElementById('navAuthArea').innerHTML = `<button class="cabinet-btn" onclick="openModal('login')">Кабинет</button>`;
+            document.getElementById('navAuthArea').innerHTML = `<button class="cabinet-btn" onclick="handleCabinetClick()">Кабинет</button>`;
         }
 
         // Загрузка данных профиля в ЛК
         function loadUserProfile(user) {
+            activeUserSession = user;
             document.getElementById('heroSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'flex';
 
