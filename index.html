@@ -484,15 +484,18 @@
 
     <!-- Логика приложения -->
     <script>
-        // Инициализация Supabase под уникальным именем переменной
         let supabaseClient = null;
         
-        // Вставь сюда свой URL проекта Supabase:
-        const SUPABASE_URL = 'https://your-project-id.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
+        // Вставлен твой реальный Supabase URL и ключ из JWT
+        const SUPABASE_URL = 'https://bynovydvlthaxylzoebd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bm92eWR2bHRoYXh5bHpvZWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3AMG3NjQxNywiZXhwIjoyMTAyMzEyNDE3f0.kV8P0lD1UgSOU-_FNgstgSBzpUwdkwNbd_5M7tl1F-I';
 
-        if (window.supabase && SUPABASE_URL.startsWith('http') && !SUPABASE_URL.includes('your-project-id')) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        try {
+            if (window.supabase && SUPABASE_URL.startsWith('http')) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error('Supabase init error:', e);
         }
 
         function openModal(type) {
@@ -521,26 +524,36 @@
 
         async function handleRegister() {
             if (!supabaseClient) {
-                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
+                alert('Ошибка инициализации Supabase!');
                 return;
             }
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
-            const { error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) alert('Ошибка: ' + error.message);
-            else alert('Успешно! Проверьте почту.');
+            
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                alert('Ошибка: ' + error.message);
+            } else {
+                alert('Успешно! Аккаунт создан.');
+                closeModal();
+            }
         }
 
         async function handleLogin() {
             if (!supabaseClient) {
-                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
+                alert('Ошибка инициализации Supabase!');
                 return;
             }
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) alert('Ошибка: ' + error.message);
-            else alert('Вы успешно вошли в SkyMoon!');
+            
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert('Ошибка: ' + error.message);
+            } else {
+                alert('Вы успешно вошли в SkyMoon!');
+                closeModal();
+            }
         }
     </script>
 </body>
