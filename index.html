@@ -488,16 +488,16 @@
 
     <!-- Скрипты -->
     <script>
-        // Безопасная инициализация Supabase (не рухнет, если URL не заменен)
-        let supabase = null;
+        // Безопасное подключение Supabase
+        let sbClient = null;
         try {
-            const SUPABASE_URL = 'https://your-project-id.supabase.co'; // Замени на свой реальный URL при необходимости
+            const SUPABASE_URL = 'https://your-project-id.supabase.co'; // Укажи свой URL, когда понадобится
             const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
             if (SUPABASE_URL.startsWith('http')) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
         } catch (e) {
-            console.log('Supabase init skipped');
+            console.log('Supabase init note:', e);
         }
 
         function openModal(type) {
@@ -525,25 +525,25 @@
         }
 
         async function handleRegister() {
-            if (!supabase) {
-                alert('Сначала укажите правильный Supabase URL в коде!');
+            if (!sbClient) {
+                alert('Укажи рабочий Supabase URL в коде!');
                 return;
             }
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
-            const { error } = await supabase.auth.signUp({ email, password });
+            const { error } = await sbClient.auth.signUp({ email, password });
             if (error) alert('Ошибка: ' + error.message);
             else alert('Успешно! Проверьте почту.');
         }
 
         async function handleLogin() {
-            if (!supabase) {
-                alert('Сначала укажите правильный Supabase URL в коде!');
+            if (!sbClient) {
+                alert('Укажи рабочий Supabase URL в коде!');
                 return;
             }
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            const { error } = await sbClient.auth.signInWithPassword({ email, password });
             if (error) alert('Ошибка: ' + error.message);
             else alert('Вы успешно вошли в SkyMoon!');
         }
