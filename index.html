@@ -486,9 +486,8 @@
     <script>
         let supabaseClient = null;
         
-        // Исправленный ключ с правильной датой
         const SUPABASE_URL = 'https://bynovydvlthaxylzoebd.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bm92eWR2bHRoYXh5bHpvZWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MzY0MTcsImV4cCI6MjEwMjMxMjQxN30.kV8P0lD1UgSOU-_FNgstgSBzpUwdkwNbd_5M7tl1F-I';
+        const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
 
         try {
             if (window.supabase && SUPABASE_URL.startsWith('http')) {
@@ -524,7 +523,7 @@
 
         async function handleRegister() {
             if (!supabaseClient) {
-                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
+                alert('Ошибка инициализации Supabase!');
                 return;
             }
             const email = document.getElementById('regEmail').value;
@@ -534,14 +533,14 @@
             if (error) {
                 alert('Ошибка: ' + error.message);
             } else {
-                alert('Успешно! Аккаунт создан.');
+                alert('Успешно! Аккаунт создан. Проверьте почту для подтверждения.');
                 closeModal();
             }
         }
 
         async function handleLogin() {
             if (!supabaseClient) {
-                alert('Пожалуйста, укажите ваш Project URL из Supabase в файле index.html!');
+                alert('Ошибка инициализации Supabase!');
                 return;
             }
             const email = document.getElementById('loginEmail').value;
