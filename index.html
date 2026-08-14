@@ -3,8 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Vorama Client</title>
+    <title>SkyMoon Client</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Подключаем официальную библиотеку Supabase JS из CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -13,17 +15,12 @@
         <nav class="navbar">
             <div class="nav-left">
                 <div class="nav-logo">
-                    <span class="logo-icon">V</span>
-                    <span class="logo-text">vorama</span>
+                    <span class="logo-icon">S</span>
+                    <span class="logo-text">skymoon</span>
                 </div>
-                <a href="#" class="nav-link" data-lang="ru">Тарифы</a>
-                <a href="#" class="nav-link" data-lang="en" style="display: none;">Tariffs</a>
-                
-                <a href="#" class="nav-link" data-lang="ru">Документация</a>
-                <a href="#" class="nav-link" data-lang="en" style="display: none;">Documentation</a>
-                
-                <a href="#" class="nav-link" data-lang="ru">Поддержка</a>
-                <a href="#" class="nav-link" data-lang="en" style="display: none;">Support</a>
+                <a href="#" class="nav-link">Тарифы</a>
+                <a href="#" class="nav-link">Документация</a>
+                <a href="#" class="nav-link">Поддержка</a>
             </div>
 
             <div class="nav-right">
@@ -32,12 +29,11 @@
                     <span>EN</span>
                     <span>UA</span>
                 </div>
-                <button class="cabinet-btn" onclick="sendMessage('openCabinet')">
+                <button class="cabinet-btn" onclick="openModal('login')">
                     <svg width="14" height="14" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
                         <path d="M11.1068 13.6229V12.2896C11.1068 11.5823 10.8258 10.9041 10.3257 10.404C9.82562 9.90388 9.14735 9.62292 8.4401 9.62292H4.4401C3.73286 9.62292 3.05458 9.90388 2.55449 10.404C2.05439 10.9041 1.77344 11.5823 1.77344 12.2896V13.6229M9.10677 4.28959C9.10677 5.76235 7.91286 6.95626 6.4401 6.95626C4.96734 6.95626 3.77344 5.76235 3.77344 4.28959C3.77344 2.81683 4.96734 1.62292 6.4401 1.62292C7.91286 1.62292 9.10677 2.81683 9.10677 4.28959Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
-                    <span data-lang="ru">Кабинет</span>
-                    <span data-lang="en" style="display: none;">Account</span>
+                    <span>Кабинет</span>
                 </button>
             </div>
         </nav>
@@ -54,45 +50,102 @@
         </div>
 
         <h1 class="hero-title">
-            <span data-lang="ru">Знай больше.<br>Побеждай с <span class="accent">vorama</span>.</span>
-            <span data-lang="en" style="display: none;">Know more.<br>Win with <span class="accent">vorama</span>.</span>
+            Знай больше.<br>Побеждай с <span class="accent">skymoon</span>.
         </h1>
 
-        <p class="hero-desc" data-lang="ru">
+        <p class="hero-desc">
             Поднимите свой игровой процесс на новый уровень. Контроль, скорость и точность — всё уже внутри.
-        </p>
-        <p class="hero-desc" data-lang="en" style="display: none;">
-            Take your gameplay to the next level. Control, speed, and accuracy — everything is already inside.
         </p>
 
         <div class="hero-buttons">
-            <button class="btn-primary" onclick="startLaunch()">
-                <span data-lang="ru">Создать аккаунт</span>
-                <span data-lang="en" style="display: none;">Create Account</span>
-            </button>
-            <button class="btn-secondary" onclick="navigateToSettings()">
-                <span data-lang="ru">Документация</span>
-                <span data-lang="en" style="display: none;">Documentation</span>
-            </button>
+            <button class="btn-primary" onclick="openModal('register')">Создать аккаунт</button>
+            <button class="btn-secondary">Документация</button>
         </div>
     </main>
 
-    <!-- Элементы управления окном (скрытые или нужные для лаунчера) -->
-    <div class="window-controls-absolute">
-        <div class="window-btn minimize" onclick="minimizeWindow()" title="Minimize"></div>
-        <div class="window-btn close" onclick="closeWindow()" title="Close"></div>
+    <!-- Модальное окно Входа / Регистрации -->
+    <div id="authModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-left-pane">
+                <div class="modal-brand-content">
+                    <div class="hero-logo-badge" style="margin: 0 auto 20px auto;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2>skymoon client</h2>
+                    <p>Контроль, скорость и точность — всё уже внутри.</p>
+                </div>
+            </div>
+
+            <div class="modal-right-pane">
+                <button class="modal-close-btn" onclick="closeModal()">×</button>
+                
+                <div id="loginForm" class="auth-form-content">
+                    <h2>Вход</h2>
+                    <p class="auth-switch-text">Нет аккаунта? <a href="#" onclick="switchForm('register')">Регистрация</a></p>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="text" id="loginEmail" placeholder="you@mail.ru">
+                    </div>
+                    <div class="input-group">
+                        <label>Пароль</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••">
+                    </div>
+                    <button class="btn-submit" onclick="handleLogin()">Войти →</button>
+                </div>
+
+                <div id="registerForm" class="auth-form-content" style="display: none;">
+                    <h2>Регистрация</h2>
+                    <p class="auth-switch-text">Уже есть аккаунт? <a href="#" onclick="switchForm('login')">Войти</a></p>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" placeholder="you@mail.ru">
+                    </div>
+                    <div class="input-group">
+                        <label>Пароль</label>
+                        <input type="password" id="regPassword" placeholder="••••••••">
+                    </div>
+                    <button class="btn-submit" onclick="handleRegister()">Создать аккаунт →</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        function sendMessage(msg) {
-            if (window.chrome && window.chrome.webview) {
-                window.chrome.webview.postMessage(msg);
-            }
+        // ВСТАВЬ СЮДА СВОЙ PROJECT URL ИЗ SUPABASE
+        const SUPABASE_URL = 'https://ТВОЙ_ID.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function openModal(type) {
+            document.getElementById('authModal').style.display = 'flex';
+            switchForm(type);
         }
-        function minimizeWindow() { sendMessage('windowRoll'); }
-        function closeWindow() { sendMessage('windowClose'); }
-        function startLaunch() { sendMessage('startGame'); }
-        function navigateToSettings() { sendMessage('navigateSettings'); }
+        function closeModal() { document.getElementById('authModal').style.display = 'none'; }
+        function switchForm(type) {
+            document.getElementById('loginForm').style.display = (type === 'login') ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = (type === 'register') ? 'block' : 'none';
+        }
+
+        async function handleRegister() {
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const { error } = await supabase.auth.signUp({ email, password });
+            if (error) alert('Ошибка: ' + error.message);
+            else alert('Успешно! Проверьте почту.');
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert('Ошибка: ' + error.message);
+            else alert('Вы успешно вошли в SkyMoon!');
+        }
     </script>
 </body>
 </html>
