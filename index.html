@@ -539,7 +539,7 @@
         </nav>
     </header>
 
-    <!-- Главный экран (для гостей) -->
+    <!-- Главный экран -->
     <main id="heroSection" class="hero-section">
         <div class="hero-logo-badge">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -563,7 +563,7 @@
         </div>
     </main>
 
-    <!-- Личный кабинет (для авторизованных) -->
+    <!-- Личный кабинет -->
     <div id="dashboardSection" class="dashboard-container">
         <div class="dashboard-header">
             <h1>Аккаунт</h1>
@@ -615,7 +615,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно авторизации/регистрации -->
+    <!-- Модальное окно -->
     <div id="authModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-left-pane">
@@ -650,7 +650,7 @@
                     <button class="btn-submit" onclick="handleLogin()">Войти →</button>
                 </div>
 
-                <!-- Форма Регистрации (с Username) -->
+                <!-- Форма Регистрации -->
                 <div id="registerForm" class="auth-form-content" style="display: none;">
                     <h2>Регистрация</h2>
                     <p class="auth-switch-text">Уже есть аккаунт? <a href="#" onclick="switchForm('login'); return false;">Войти</a></p>
@@ -672,7 +672,7 @@
         </div>
     </div>
 
-    <!-- Скрипт логики -->
+    <!-- Скрипт -->
     <script>
         let supabaseClient = null;
         
@@ -687,7 +687,6 @@
             console.error('Supabase init error:', e);
         }
 
-        // Проверяем сессию при загрузке сайта
         window.addEventListener('DOMContentLoaded', async () => {
             if (supabaseClient) {
                 const { data: { session } } = await supabaseClient.auth.getSession();
@@ -717,7 +716,12 @@
             document.getElementById('registerForm').style.display = (type === 'register') ? 'block' : 'none';
         }
 
-        // Регистрация с Username
+        // Генерация случайного UID (6-значный ID)
+        function generateRandomUid() {
+            return Math.floor(100000 + Math.random() * 900000);
+        }
+
+        // Регистрация с сохранением никнейма и UID в метаданные
         async function handleRegister() {
             if (!supabaseClient) return alert('Ошибка Supabase');
             const username = document.getElementById('regUsername').value.trim();
@@ -729,12 +733,16 @@
                 return;
             }
 
-            // 1. Создаем пользователя в auth
+            const randomUid = generateRandomUid();
+
             const { data, error } = await supabaseClient.auth.signUp({ 
                 email, 
                 password,
                 options: {
-                    data: { username: username }
+                    data: { 
+                        username: username,
+                        uid: randomUid
+                    }
                 }
             });
 
@@ -744,12 +752,6 @@
             }
 
             if (data.user) {
-                // 2. Записываем профиль в таблицу profiles для генерации UID
-                await supabaseClient.from('profiles').insert([
-                    { id: data.user.id, username: username, email: email }
-                ]);
-
-                alert('Успешно! Аккаунт создан.');
                 closeModal();
                 loadUserProfile(data.user);
             }
@@ -770,7 +772,7 @@
             }
         }
 
-        // Выход из аккаунта
+        // Выход
         async function handleLogout() {
             await supabaseClient.auth.signOut();
             document.getElementById('heroSection').style.display = 'flex';
@@ -778,30 +780,16 @@
             document.getElementById('navAuthArea').innerHTML = `<button class="cabinet-btn" onclick="openModal('login')">Кабинет</button>`;
         }
 
-        // Загрузка данных профиля и показ ЛК
-        async function loadUserProfile(user) {
+        // Загрузка данных профиля в ЛК
+        function loadUserProfile(user) {
             document.getElementById('heroSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'flex';
 
-            // Меняем кнопку в шапке на "Выйти"
             document.getElementById('navAuthArea').innerHTML = `<button class="logout-btn" onclick="handleLogout()">Выйти</button>`;
 
-            // Подтягиваем данные профиля (UID и Username) из базы данных
             let username = user.user_metadata?.username || user.email.split('@')[0];
-            let uid = '1';
+            let uid = user.user_metadata?.uid || '220669';
 
-            const { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', user.id)
-                .single();
-
-            if (profile) {
-                username = profile.username;
-                uid = profile.uid;
-            }
-
-            // Заполняем интерфейс личного кабинета
             document.getElementById('profileUsername').innerText = username;
             document.getElementById('profileLogin').innerText = username;
             document.getElementById('profileEmail').innerText = user.email;
