@@ -575,7 +575,7 @@
                 <div class="profile-avatar" id="userAvatarLetter">U</div>
                 <div class="profile-meta">
                     <h3 id="profileUsername">username</h3>
-                    <span id="profileLoginSub">westixz</span>
+                    <span id="profileEmail">email@gmail.com</span>
                 </div>
             </div>
             <button class="download-client-btn">
@@ -596,8 +596,12 @@
                     <span>Пользователь</span>
                 </div>
                 <div class="detail-item">
-                    <label>👤 Никнейм</label>
+                    <label>👤 Логин (Username)</label>
                     <span id="profileLogin">...</span>
+                </div>
+                <div class="detail-item">
+                    <label>✉️ Почта</label>
+                    <span id="profileEmailDetail">...</span>
                 </div>
                 <div class="detail-item">
                     <label>📅 Дата регистрации</label>
@@ -636,8 +640,8 @@
                     <h2>Вход</h2>
                     <p class="auth-switch-text">Нет аккаунта? <a href="#" onclick="switchForm('register'); return false;">Регистрация</a></p>
                     <div class="input-group">
-                        <label>Никнейм (Username)</label>
-                        <input type="text" id="loginUsername" placeholder="westixz">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" placeholder="you@mail.ru">
                     </div>
                     <div class="input-group">
                         <label>Пароль</label>
@@ -653,6 +657,10 @@
                     <div class="input-group">
                         <label>Никнейм (Username)</label>
                         <input type="text" id="regUsername" placeholder="westixz">
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" placeholder="you@mail.ru">
                     </div>
                     <div class="input-group">
                         <label>Пароль</label>
@@ -712,23 +720,22 @@
             return Math.floor(100000 + Math.random() * 900000);
         }
 
-        // Регистрация по юзернейму и паролю
+        // Регистрация с почтой и никнеймом
         async function handleRegister() {
             if (!supabaseClient) return alert('Ошибка Supabase');
-            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
 
-            if (!username || !password) {
+            if (!username || !email || !password) {
                 alert('Заполните все поля!');
                 return;
             }
 
-            // Делаем фальшивую почту для Supabase на основе никнейма
-            const fakeEmail = `${username}@skymoon.local`;
             const randomUid = generateRandomUid();
 
             const { data, error } = await supabaseClient.auth.signUp({ 
-                email: fakeEmail, 
+                email, 
                 password,
                 options: {
                     data: { 
@@ -749,26 +756,20 @@
             }
         }
 
-        // Вход по юзернейму и паролю
+        // Вход по почте и паролю
         async function handleLogin() {
             if (!supabaseClient) return;
-            const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if (!username || !password) {
+            if (!email || !password) {
                 alert('Заполните все поля!');
                 return;
             }
 
-            const fakeEmail = `${username}@skymoon.local`;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ 
-                email: fakeEmail, 
-                password 
-            });
-
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
-                alert('Ошибка входа: Неверный никнейм или пароль');
+                alert('Ошибка входа: ' + error.message);
             } else {
                 closeModal();
                 loadUserProfile(data.user);
@@ -795,7 +796,8 @@
 
             document.getElementById('profileUsername').innerText = username;
             document.getElementById('profileLogin').innerText = username;
-            document.getElementById('profileLoginSub').innerText = username;
+            document.getElementById('profileEmail').innerText = user.email;
+            document.getElementById('profileEmailDetail').innerText = user.email;
             document.getElementById('profileUid').innerText = uid;
             document.getElementById('userAvatarLetter').innerText = username.charAt(0).toUpperCase();
 
