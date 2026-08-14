@@ -236,7 +236,7 @@
             height: 100vh;
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
@@ -436,7 +436,7 @@
     </main>
 
     <!-- Модальное окно Входа / Регистрации -->
-    <div id="authModal" class="modal-overlay" style="display: none;">
+    <div id="authModal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-left-pane">
                 <div class="modal-brand-content">
@@ -457,10 +457,10 @@
                 
                 <div id="loginForm" class="auth-form-content">
                     <h2>Вход</h2>
-                    <p class="auth-switch-text">Нет аккаунта? <a href="#" onclick="switchForm('register')">Регистрация</a></p>
+                    <p class="auth-switch-text">Нет аккаунта? <a href="#" onclick="switchForm('register'); return false;">Регистрация</a></p>
                     <div class="input-group">
-                        <label>Email или логин</label>
-                        <input type="text" id="loginEmail" placeholder="you@mail.ru или логин">
+                        <label>Email</label>
+                        <input type="text" id="loginEmail" placeholder="you@mail.ru">
                     </div>
                     <div class="input-group">
                         <label>Пароль</label>
@@ -471,7 +471,7 @@
 
                 <div id="registerForm" class="auth-form-content" style="display: none;">
                     <h2>Регистрация</h2>
-                    <p class="auth-switch-text">Уже есть аккаунт? <a href="#" onclick="switchForm('login')">Войти</a></p>
+                    <p class="auth-switch-text">Уже есть аккаунт? <a href="#" onclick="switchForm('login'); return false;">Войти</a></p>
                     <div class="input-group">
                         <label>Email</label>
                         <input type="email" id="regEmail" placeholder="you@mail.ru">
@@ -488,22 +488,47 @@
 
     <!-- Скрипты -->
     <script>
-        const SUPABASE_URL = 'https://ТВОЙ_ID.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Безопасная инициализация Supabase (не рухнет, если URL не заменен)
+        let supabase = null;
+        try {
+            const SUPABASE_URL = 'https://your-project-id.supabase.co'; // Замени на свой реальный URL при необходимости
+            const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
+            if (SUPABASE_URL.startsWith('http')) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.log('Supabase init skipped');
+        }
 
         function openModal(type) {
-            document.getElementById('authModal').style.display = 'flex';
-            switchForm(type);
+            const modal = document.getElementById('authModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                switchForm(type);
+            }
         }
-        function closeModal() { document.getElementById('authModal').style.display = 'none'; }
+
+        function closeModal() {
+            const modal = document.getElementById('authModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
         function switchForm(type) {
-            document.getElementById('loginForm').style.display = (type === 'login') ? 'block' : 'none';
-            document.getElementById('registerForm').style.display = (type === 'register') ? 'block' : 'none';
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            if (loginForm && registerForm) {
+                loginForm.style.display = (type === 'login') ? 'block' : 'none';
+                registerForm.style.display = (type === 'register') ? 'block' : 'none';
+            }
         }
 
         async function handleRegister() {
+            if (!supabase) {
+                alert('Сначала укажите правильный Supabase URL в коде!');
+                return;
+            }
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
             const { error } = await supabase.auth.signUp({ email, password });
@@ -512,6 +537,10 @@
         }
 
         async function handleLogin() {
+            if (!supabase) {
+                alert('Сначала укажите правильный Supabase URL в коде!');
+                return;
+            }
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const { error } = await supabase.auth.signInWithPassword({ email, password });
