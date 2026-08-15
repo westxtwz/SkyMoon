@@ -58,23 +58,19 @@
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-weight: 700;
             font-size: 15px;
             letter-spacing: 0.5px;
             cursor: pointer;
         }
 
-        .logo-icon {
-            background: #8b5cf6;
-            color: white;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .logo-img {
+            width: 26px;
+            height: 26px;
             border-radius: 6px;
-            font-size: 12px;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
         }
 
         .nav-link {
@@ -171,16 +167,23 @@
         }
 
         .hero-logo-badge {
-            width: 48px;
-            height: 48px;
+            width: 54px;
+            height: 54px;
             background: rgba(139, 92, 246, 0.15);
             border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 14px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 24px;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+            overflow: hidden;
+        }
+
+        .hero-logo-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .hero-title {
@@ -320,13 +323,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            color: #a78bfa;
-            font-size: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .tariff-card.green .tariff-icon-area {
-            color: #34d399;
+        .tariff-icon-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .tariff-info h3 {
@@ -815,7 +819,7 @@
         <nav class="navbar">
             <div class="nav-left">
                 <div class="nav-logo" onclick="showHero()">
-                    <span class="logo-icon">S</span>
+                    <img src="8a1c2496-0f08-4e4c-b3a5-14b7b60f6103.jpg" alt="Logo" class="logo-img">
                     <span class="nav-link" style="color:white; font-weight:700;">SkyMoon</span>
                 </div>
                 <button class="nav-link" onclick="showTariffs()">Тарифы</button>
@@ -839,11 +843,7 @@
     <!-- Главный экран -->
     <main id="heroSection" class="hero-section">
         <div class="hero-logo-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
+            <img src="8a1c2496-0f08-4e4c-b3a5-14b7b60f6103.jpg" alt="Logo">
         </div>
 
         <h1 class="hero-title">
@@ -871,7 +871,9 @@
             <!-- Товар 1: SkyMoon 1.21.4 -->
             <div class="tariff-card" onclick="openCheckout('SkyMoon 1.21.4')">
                 <div>
-                    <div class="tariff-icon-area">SM</div>
+                    <div class="tariff-icon-area">
+                        <img src="8a1c2496-0f08-4e4c-b3a5-14b7b60f6103.jpg" alt="Logo">
+                    </div>
                     <div class="tariff-info" style="margin-top: 20px;">
                         <h3>Тариф 1.21.4</h3>
                         <h2>SkyMoon 1.21.4</h2>
@@ -884,7 +886,9 @@
             <!-- Товар 2: Сброс HWID -->
             <div class="tariff-card green" onclick="openCheckout('Сброс HWID')">
                 <div>
-                    <div class="tariff-icon-area">HW</div>
+                    <div class="tariff-icon-area">
+                        <img src="8a1c2496-0f08-4e4c-b3a5-14b7b60f6103.jpg" alt="Logo">
+                    </div>
                     <div class="tariff-info" style="margin-top: 20px;">
                         <h3>Разовая услуга</h3>
                         <h2>Сброс HWID</h2>
@@ -958,11 +962,7 @@
             <div class="modal-left-pane">
                 <div class="modal-brand-content">
                     <div class="hero-logo-badge" style="margin: 0 auto 20px auto;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                            <path d="M2 17L12 22L22 17" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                            <path d="M2 12L12 17L22 12" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
+                        <img src="8a1c2496-0f08-4e4c-b3a5-14b7b60f6103.jpg" alt="Logo">
                     </div>
                     <h2>SkyMoon Client</h2>
                     <p>Контроль, скорость и точность — всё уже внутри.</p>
@@ -1015,11 +1015,7 @@
             <button class="modal-close-btn" onclick="closeCheckout()">×</button>
             <div class="checkout-left">
                 <div class="hero-logo-badge" style="margin-bottom: 16px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                        <path d="M2 17L12 22L22 17" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                        <path d="M2 12L12 17L22 12" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
+                    <img src="8a1c2496-0f08-4e4c-b3a5-14b7b60f6103.jpg" alt="Logo">
                 </div>
                 <h2 id="checkoutProductName" style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">SkyMoon 1.21.4</h2>
                 <p style="font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4;">Вы получаете клиент абсолютно навсегда, так же все последующие обновления.</p>
@@ -1148,7 +1144,6 @@
             currentBasePrice = price;
             currentPeriodName = name;
             
-            // Смена активных классов кнопок периодов
             const btns = document.querySelectorAll('.period-btn');
             btns.forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
