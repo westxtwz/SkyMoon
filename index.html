@@ -20,7 +20,7 @@
             background-color: #0b0d10;
             background-image: radial-gradient(circle at 50% 30%, #1a103c 0%, #0b0d10 70%);
             height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
             color: #ffffff;
             user-select: none;
         }
@@ -62,6 +62,7 @@
             font-weight: 700;
             font-size: 15px;
             letter-spacing: 0.5px;
+            cursor: pointer;
         }
 
         .logo-icon {
@@ -82,6 +83,9 @@
             font-size: 13px;
             font-weight: 500;
             transition: color 0.2s;
+            cursor: pointer;
+            background: none;
+            border: none;
         }
 
         .nav-link:hover {
@@ -237,6 +241,128 @@
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Секция Тарифы / Товары */
+        .tariffs-section {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+
+        .tariffs-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .tariffs-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tariffs-header p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 500px;
+            line-height: 1.4;
+        }
+
+        .tariffs-grid {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .tariff-card {
+            width: 320px;
+            height: 380px;
+            background: linear-gradient(135deg, rgba(74, 52, 120, 0.35) 0%, rgba(20, 23, 30, 0.85) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 24px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tariff-card.green {
+            background: linear-gradient(135deg, rgba(34, 110, 80, 0.35) 0%, rgba(20, 23, 30, 0.85) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+
+        .tariff-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .tariff-card.green:hover {
+            border-color: rgba(52, 211, 153, 0.6);
+        }
+
+        .tariff-icon-area {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #a78bfa;
+            font-size: 18px;
+        }
+
+        .tariff-card.green .tariff-icon-area {
+            color: #34d399;
+        }
+
+        .tariff-info h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+        }
+
+        .tariff-info h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .tariff-info p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.4;
+        }
+
+        .tariff-price {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .tariffs-footer-note {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+        }
+
+        .tariffs-footer-note a {
+            color: #a78bfa;
+            text-decoration: none;
         }
 
         /* Личный кабинет (Dashboard) */
@@ -517,11 +643,11 @@
     <header class="navbar-container">
         <nav class="navbar">
             <div class="nav-left">
-                <div class="nav-logo">
+                <div class="nav-logo" onclick="showHero()">
                     <span class="logo-icon">S</span>
                     <span class="nav-link" style="color:white; font-weight:700;">SkyMoon</span>
                 </div>
-                <a href="#" class="nav-link">Тарифы</a>
+                <button class="nav-link" onclick="showTariffs()">Тарифы</button>
                 <a href="#" class="nav-link">Документация</a>
                 <a href="#" class="nav-link">Поддержка</a>
             </div>
@@ -559,9 +685,50 @@
 
         <div class="hero-buttons">
             <button class="btn-primary" onclick="openModal('register')">Создать аккаунт</button>
-            <button class="btn-secondary">Документация</button>
+            <button class="btn-secondary" onclick="showTariffs()">Тарифы</button>
         </div>
     </main>
+
+    <!-- Секция Тарифы / Товары -->
+    <section id="tariffsSection" class="tariffs-section">
+        <div class="tariffs-header">
+            <h1>Товары</h1>
+            <p>Выберите план и получите мгновенный доступ ко всем функциям, обновлениям и поддержке.</p>
+        </div>
+
+        <div class="tariffs-grid">
+            <!-- Товар 1: SkyMoon 1.21.4 -->
+            <div class="tariff-card" onclick="handleProductClick('SkyMoon 1.21.4', 600)">
+                <div>
+                    <div class="tariff-icon-area">SM</div>
+                    <div class="tariff-info" style="margin-top: 20px;">
+                        <h3>Тариф 1.21.4</h3>
+                        <h2>SkyMoon 1.21.4</h2>
+                        <p>Вы получаете клиент абсолютно навсегда, так же все последующие обновления.</p>
+                    </div>
+                </div>
+                <div class="tariff-price">600 ₽</div>
+            </div>
+
+            <!-- Товар 2: Сброс HWID -->
+            <div class="tariff-card green" onclick="handleProductClick('Сброс HWID', 449)">
+                <div>
+                    <div class="tariff-icon-area">HW</div>
+                    <div class="tariff-info" style="margin-top: 20px;">
+                        <h3>Разовая услуга</h3>
+                        <h2>Сброс HWID</h2>
+                        <p>Сброс привязки (HWID) на вашем аккаунте клиента к железу.</p>
+                    </div>
+                </div>
+                <div class="tariff-price">449 ₽</div>
+            </div>
+        </div>
+
+        <div class="tariffs-footer-note">
+            Все планы включают неограниченный доступ, автоматические обновления и приоритетную поддержку.<br>
+            Также доступно на <a href="#" target="_blank">FunPay</a>
+        </div>
+    </section>
 
     <!-- Личный кабинет -->
     <div id="dashboardSection" class="dashboard-container">
@@ -676,6 +843,7 @@
     <script>
         let supabaseClient = null;
         let activeUserSession = null;
+        let pendingProduct = null;
         
         const SUPABASE_URL = 'https://bynovydvlthaxylzoebd.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_LsoTR1v19qP605SKomkPtw_obF2OGml';
@@ -693,19 +861,37 @@
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) {
                     activeUserSession = session.user;
-                    loadUserProfile(session.user);
                 }
             }
         });
 
-        // Обработка клика по кнопке «Кабинет»
+        function showHero() {
+            document.getElementById('tariffsSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('heroSection').style.display = 'flex';
+        }
+
+        function showTariffs() {
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('tariffsSection').style.display = 'flex';
+        }
+
         function handleCabinetClick() {
             if (activeUserSession) {
-                // Если сессия есть, сразу кидаем в личный кабинет без пароля
                 loadUserProfile(activeUserSession);
             } else {
-                // Если не вошел — открываем модальное окно входа
                 openModal('login');
+            }
+        }
+
+        function handleProductClick(productName, price) {
+            if (!activeUserSession) {
+                pendingProduct = { name: productName, price: price };
+                alert('Для покупки товара необходимо войти в аккаунт или зарегистрироваться.');
+                openModal('register');
+            } else {
+                alert(`Переход к оформлению товара: "${productName}" (${price} ₽)`);
             }
         }
 
@@ -733,7 +919,6 @@
             return Math.floor(100000 + Math.random() * 900000);
         }
 
-        // Регистрация
         async function handleRegister() {
             if (!supabaseClient) return alert('Ошибка Supabase');
             const username = document.getElementById('regUsername').value.trim();
@@ -766,11 +951,15 @@
             if (data.user) {
                 activeUserSession = data.user;
                 closeModal();
-                loadUserProfile(data.user);
+                if (pendingProduct) {
+                    alert(`Успешная регистрация! Переход к покупке: ${pendingProduct.name}`);
+                    pendingProduct = null;
+                } else {
+                    loadUserProfile(data.user);
+                }
             }
         }
 
-        // Вход
         async function handleLogin() {
             if (!supabaseClient) return;
             const email = document.getElementById('loginEmail').value.trim();
@@ -787,23 +976,26 @@
             } else {
                 activeUserSession = data.user;
                 closeModal();
-                loadUserProfile(data.user);
+                if (pendingProduct) {
+                    alert(`Успешный вход! Переход к покупке: ${pendingProduct.name}`);
+                    pendingProduct = null;
+                } else {
+                    loadUserProfile(data.user);
+                }
             }
         }
 
-        // Выход из аккаунта
         async function handleLogout() {
             await supabaseClient.auth.signOut();
             activeUserSession = null;
-            document.getElementById('heroSection').style.display = 'flex';
-            document.getElementById('dashboardSection').style.display = 'none';
+            showHero();
             document.getElementById('navAuthArea').innerHTML = `<button class="cabinet-btn" onclick="handleCabinetClick()">Кабинет</button>`;
         }
 
-        // Загрузка данных профиля в ЛК
         function loadUserProfile(user) {
             activeUserSession = user;
             document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('tariffsSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'flex';
 
             document.getElementById('navAuthArea').innerHTML = `<button class="logout-btn" onclick="handleLogout()">Выйти</button>`;
