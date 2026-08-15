@@ -1088,22 +1088,36 @@
         window.addEventListener('DOMContentLoaded', async () => {
             if (supabaseClient) {
                 const { data: { session } } = await supabaseClient.auth.getSession();
-                if (session) {
+                if (session && session.user) {
                     activeUserSession = session.user;
+                    // Если пользователь уже вошел, оставляем кнопку «Кабинет» или можно автоматически подгрузить ЛК
+                    updateAuthButtonState();
                 }
             }
         });
+
+        function updateAuthButtonState() {
+            const authArea = document.getElementById('navAuthArea');
+            if (activeUserSession) {
+                // Если пользователь авторизован, при клике переходим в кабинет, а в шапке показываем «Кабинет»
+                authArea.innerHTML = `<button class="cabinet-btn" onclick="loadUserProfile(activeUserSession)">Кабинет</button>`;
+            } else {
+                authArea.innerHTML = `<button class="cabinet-btn" onclick="handleCabinetClick()">Кабинет</button>`;
+            }
+        }
 
         function showHero() {
             document.getElementById('tariffsSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'flex';
+            updateAuthButtonState();
         }
 
         function showTariffs() {
             document.getElementById('heroSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('tariffsSection').style.display = 'flex';
+            updateAuthButtonState();
         }
 
         function handleCabinetClick() {
@@ -1293,6 +1307,7 @@
             document.getElementById('tariffsSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'flex';
 
+            // Находясь внутри личного кабинета, меняем кнопку на «Выйти»
             document.getElementById('navAuthArea').innerHTML = `<button class="logout-btn" onclick="handleLogout()">Выйти</button>`;
 
             let username = user.user_metadata?.username || user.email.split('@')[0];
